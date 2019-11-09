@@ -17,7 +17,7 @@ return [
     ],
 
     'acl' => [
-        'model'    => \Souktel\MessageBroker\Models\Permission::class,
+        'model'    => \Souktel\ACL\Models\Permission::class,
         'database' => [
             'table'       => 'permissions',
             'name_column' => 'name',
