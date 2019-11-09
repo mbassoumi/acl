@@ -23,7 +23,7 @@ return [
             'name_column' => 'name',
             'slug_column' => 'slug'
         ],
-        'register-permission-event-name' => 'register-permissions'
+        'register-permission-message-name' => 'register-permissions'
     ],
 
 
