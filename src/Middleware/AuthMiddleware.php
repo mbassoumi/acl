@@ -26,11 +26,11 @@ class AuthMiddleware
         /*
          * skip usage of this middleware if auth is not enabled.
          */
-        if (config('souktel-acl.enable')) {
+        if (!config('souktel-acl.enable')) {
             $request->authUser = new AuthUser([], false);
             return $next($request);
         }
-        $token = $request->header(config('souktel-acl.auth.received_token_header'));
+        $token = $request->header(config('souktel-acl.auth.token_header'));
 
         $client = new Client([
             'base_uri' => config('souktel-acl.auth.auth_service.url'),
