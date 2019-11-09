@@ -1,0 +1,27 @@
+{
+  "name": "souktel/acl",
+  "description": "Manage ACL between Souktel services",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "majdbassoumi",
+      "email": "mbbassoumi@gmail.com"
+    }
+  ],
+  "require": {
+    "php": "^7.1.3",
+    "souktel/message-broker": "^1.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Souktel\\ACL\\": "src/"
+    }
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "Souktel\\ACL\\SouktelACLServiceProvider"
+      ]
+    }
+  }
+}
