@@ -62,6 +62,6 @@ class RegisterPermissions extends Command
             'permissions' => $permissions,
             'service'     => config('souktel-acl.this_service.key')
         ];
-        app('MessageBroker')->publish(config('souktel-acl.acl.register-permission-event-name'), json_encode($message), $queue);
+        app('MessageBroker')->publish(config('souktel-acl.acl.register-permission-message-name'), json_encode($message), $queue);
     }
 }
