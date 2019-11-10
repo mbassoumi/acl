@@ -5,6 +5,7 @@ namespace Souktel\ACL\Middleware;
 
 use Closure;
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\RequestException;
 use Illuminate\Http\Request;
 use Souktel\ACL\Classes\AuthUser;
@@ -31,20 +32,24 @@ class AuthMiddleware
         }
         $token = $request->header(config('souktel-acl.auth.token_header.received'));
 
-        $client = new Client([
-            'base_uri' => config('souktel-acl.auth.auth_service.url'),
-        ]);
+        try {
+            $client = new Client([
+                'base_uri' => config('souktel-acl.auth.auth_service.url'),
+            ]);
 
-        $response = $client->request('GET', config('souktel-acl.auth.auth_service.permission_api_uri'), [
-            'form_params' => [],
-            'headers'     => [
-                config('souktel-acl.auth.token_header.sent') => $token
-            ],
-        ]);
-        if ($response->getStatusCode() == 200) {
-            $payload = json_decode($response->getBody()->getContents(), true);
-            $request->authUser = new AuthUser($payload);
-            return $next($request);
+            $response = $client->request('GET', config('souktel-acl.auth.auth_service.permission_api_uri'), [
+                'form_params' => [],
+                'headers'     => [
+                    config('souktel-acl.auth.token_header.sent') => $token
+                ],
+            ]);
+            if ($response->getStatusCode() == 200) {
+                $payload = json_decode($response->getBody()->getContents(), true);
+                $request->authUser = new AuthUser($payload);
+                return $next($request);
+            }
+        } catch (ClientException $exception) {
+            return response()->json(['message' => 'UNAUTHENTICATED'], Response::HTTP_FORBIDDEN);
         }
 
         return response()->json(['message' => 'UNAUTHENTICATED'], Response::HTTP_FORBIDDEN);
