@@ -47,7 +47,8 @@ class AuthUser
                 $this->permissions = $payload['permissions'];
                 $this->user = $payload['user'];
             } else {
-                throw new \Exception(__('messages.wrong_payload'));
+                $exception = config('souktel-acl.auth.invalid_payload_exception');
+                throw new $exception();
             }
         } else {
             $permissionModel = config('souktel-acl.acl.model');

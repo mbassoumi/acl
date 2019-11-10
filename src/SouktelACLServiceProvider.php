@@ -12,12 +12,13 @@ class SouktelACLServiceProvider extends ServiceProvider
 {
     public function boot()
     {
+
         $this->publishes([
-            __DIR__ . '/../config/souktel-acl.php' => config_path('souktel-acl.php'),
+            __DIR__ . '/../config/souktel-acl.php' => base_path('/config/souktel-acl.php'),
         ], 'config');
 
         $this->publishes([
-            __DIR__ . '/../database/migrations/create_permissions_table.php.stub' => database_path('migrations/' . date('Y_m_d_His', time()) . '_create_' . config('souktel-acl.acl.database.table') . '_table.php'),
+            __DIR__ . '/../database/migrations/create_permissions_table.php.stub' => database_path('migrations/' . date('Y_m_d_His', time()) . '_create_permissions_table.php'),
         ], 'migrations');
 
     }

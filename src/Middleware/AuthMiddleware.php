@@ -22,7 +22,6 @@ class AuthMiddleware
 
     public function handle(Request $request, Closure $next, $guard = null)
     {
-
         /*
          * skip usage of this middleware if auth is not enabled.
          */
@@ -30,34 +29,25 @@ class AuthMiddleware
             $request->authUser = new AuthUser([], false);
             return $next($request);
         }
-        $token = $request->header(config('souktel-acl.auth.token_header'));
+        $token = $request->header(config('souktel-acl.auth.token_header.received'));
 
         $client = new Client([
             'base_uri' => config('souktel-acl.auth.auth_service.url'),
         ]);
 
-        try {
-            $response = $client->request(config('souktel-acl.auth.auth_service.permission_api_method'), config('souktel-acl.auth.auth_service.permission_api_uri'), [
-                'form_params' => [],
-                'headers'     => [
-                    config('souktel-acl.auth.auth_service.token_header') => $token
-                ],
-            ]);
-            if ($response->getStatusCode() == 200) {
-                $payload = json_decode($response->getBody()->getContents(), true);
-                try {
-                    $request->authUser = new AuthUser($payload);
-                } catch (\Exception $exception) {
-                    return response()->json(['message' => $exception->getMessage()], Response::HTTP_FORBIDDEN);
-                }
-                return $next($request);
-            }
-        } catch (RequestException $requestException) {
-            // WTF
-            //TODO: handle the exception
-            return response()->json(['message' => __('messages.response_messages.unauthenticated')], Response::HTTP_FORBIDDEN);
+        $response = $client->request('GET', config('souktel-acl.auth.auth_service.permission_api_uri'), [
+            'form_params' => [],
+            'headers'     => [
+                config('souktel-acl.auth.token_header.sent') => $token
+            ],
+        ]);
+        if ($response->getStatusCode() == 200) {
+            $payload = json_decode($response->getBody()->getContents(), true);
+            $request->authUser = new AuthUser($payload);
+            return $next($request);
         }
 
-        return response()->json(['message' => __('messages.response_messages.unauthenticated')], Response::HTTP_FORBIDDEN);
+        return response()->json(['message' => 'UNAUTHENTICATED'], Response::HTTP_FORBIDDEN);
     }
+
 }

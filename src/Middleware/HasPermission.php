@@ -32,7 +32,7 @@ class HasPermission
             return $next($request);
         }
         if (!$request->authUser->can($permissions)) {
-            return response()->json(['message' => __('messages.response_messages.unauthorized')], Response::HTTP_UNAUTHORIZED);
+            return response()->json(['message' => 'UNAUTHORIZED'], Response::HTTP_UNAUTHORIZED);
         }
 
         return $next($request);
