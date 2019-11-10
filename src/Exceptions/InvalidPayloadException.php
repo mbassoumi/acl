@@ -11,15 +11,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 class InvalidPayloadException extends Exception
 {
-    /**
-     * Report the exception.
-     *
-     * @return void
-     */
-    public function report()
-    {
-        parent::report($this);
-    }
 
     public function render($request)
     {
