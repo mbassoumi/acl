@@ -9,16 +9,16 @@
 
 # About The Project
 
-implementation of Message Broker to support communication between microservices through messages
+implementation of ACL in souktel services
 
 # Installation
 ```composer
- composer require souktel/message-broker
+ composer require souktel/acl
 ```
 In Laravel:
  - publish config and migrations files from vendor
  ```php
-php artisan vendor:publish --provider="Souktel\MessageBroker\SouktelMessageBrokerServiceProvider"
+php artisan vendor:publish --provider="Souktel\ACL\SouktelACLServiceProvider"
 ```
 
 In Lumen:
@@ -32,6 +32,15 @@ in config file
 
 | variable  | description | 
 | ------------- | ------------- |
-| database  | if enable = true, all published messages will be stored in database. you can change tables name before run migration command.   |
-| log  | if enable = true, there will be some output logs through channel name in config file   | |
-| settings  | Message Broker settings  |
+|enable | (boolean) enable or disable ACL in the service [default = true] |
+| auth | auth functionality |
+| auth.auth_service | auth service details |
+| auth.token_header.sent | token header in request sent to Auth service from current service |
+| auth.token_header.received | token header in request received in the current service |
+| auth.invalid_payload_exception | Custom exception when token payload is invalid |
+| acl | acl functionality |
+| acl.model | permission model |
+| acl.database  | name and slug columns in permissions table in database |
+| acl.register_permission_message_name  | register permission message in message broker  |
+| this_service  | current service details |
+| this_service.key  | current service key or slug to be send in register permission message in message broker |
